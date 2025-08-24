@@ -9,7 +9,7 @@ on:
 jobs:
     plan:
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull-request'
+        if: github.event_name == 'pull_request'
         defaults:
             run:
                 working-directory: dev
