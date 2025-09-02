@@ -1,6 +1,14 @@
 name: Terraform Dev Deployment
-on: push
-
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+permissions:
+  id-token: write
+  contents: read
 jobs:
     plan:
         runs-on: ubuntu-latest
@@ -23,8 +31,13 @@ jobs:
                 role-session-name: github-actions
                 aws-region: us-east-1
             - name: Terraform init
-              run: terraform init 
+              run: terraform init
             - name: Terraform validate
-              run: terraform validate 
+              run: terraform validate
             - name: Terraform plan
-              run: terraform plan -var-file=dev.tfvars
+              run: terraform plan -var-file=dev.tfvars -out=tfplan
+            - name: Upload tfplan
+              uses: actions/upload-artifact@v4
+              with:
+                name: tfplan
+                path: ./dev/tfplan
