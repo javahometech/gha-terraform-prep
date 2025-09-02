@@ -1,0 +1,35 @@
+name: Terraform Dev Deployment
+on:
+    pull_request:
+        branches:
+            - dev
+    push:
+        branches:
+            - dev
+jobs:
+    plan:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        defaults:
+            run:
+                working-directory: dev
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+            - name: Setup terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: 1.8.5
+
+            - name: Configure AWS credentials via OIDC
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::646057972714:role/gihub-oidc-udemy-course
+                role-session-name: github-actions
+                aws-region: us-east-1
+            - name: Terraform init
+              run: terraform init 
+            - name: Terraform validate
+              run: terraform validate 
+            - name: Terraform plan
+              run: terraform plan -var-file=dev.tfvars
