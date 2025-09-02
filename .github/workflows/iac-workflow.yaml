@@ -32,10 +32,7 @@ jobs:
                 aws-region: us-east-1
             - name: Terraform init
               run: terraform init
-              working-directory: dev 
             - name: Terraform validate
               run: terraform validate
-              working-directory: dev 
             - name: Terraform plan
               run: terraform plan -var-file=dev.tfvars
-              working-directory: dev
